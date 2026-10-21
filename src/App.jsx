@@ -3,7 +3,7 @@ import Hero from "./components/Hero";
 import Categories from "./components/Categories";
 import Menu from "./components/Menu";
 import About from "./components/About";
-import Contact from "./components/contact";
+import Contact from "./components/Contact";
 
 function App() {
   return (
