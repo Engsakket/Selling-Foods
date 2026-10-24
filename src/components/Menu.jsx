@@ -1,10 +1,8 @@
-
 import { useState } from "react";
 import { FiSearch, FiShoppingCart } from "react-icons/fi";
 
-function Menu() {
 const foods = [
-  // 🍕 Pizza
+  // Pizza
   {
     name: "Margherita Pizza",
     category: "Pizza",
@@ -62,7 +60,7 @@ const foods = [
     des: "Savory mushrooms with creamy cheese and aromatic herbs.",
   },
 
-  // 🍔 Burgers
+  // Burgers
   {
     name: "Cheese Burger",
     category: "Burgers",
@@ -120,7 +118,7 @@ const foods = [
     des: "A tasty plant-based patty with lettuce, tomato, and avocado.",
   },
 
-  // 🥗 Healthy
+  // Healthy
   {
     name: "Fresh Garden Salad",
     category: "Healthy",
@@ -178,7 +176,7 @@ const foods = [
     des: "Grilled chicken and crisp vegetables wrapped in a soft tortilla.",
   },
 
-  // 🍝 Pasta
+  // Pasta
   {
     name: "Creamy Pasta",
     category: "Pasta",
@@ -236,7 +234,7 @@ const foods = [
     des: "Comforting macaroni covered in a creamy cheese sauce.",
   },
 
-  // 🍣 Sushi
+  // Sushi
   {
     name: "Fresh Sushi",
     category: "Sushi",
@@ -294,7 +292,7 @@ const foods = [
     des: "Tuna sushi with a spicy sauce and a touch of sesame.",
   },
 
-  // 🍗 Chicken
+  // Chicken
   {
     name: "Crispy Fried Chicken",
     category: "Chicken",
@@ -352,7 +350,7 @@ const foods = [
     des: "Crispy chicken strips with a bold and spicy seasoning.",
   },
 
-  // 🍰 Desserts
+  // Desserts
   {
     name: "Strawberry Dessert",
     category: "Desserts",
@@ -410,7 +408,7 @@ const foods = [
     des: "Fluffy pancakes served with syrup and fresh fruit.",
   },
 
-  // 🥤 Drinks
+  // Drinks
   {
     name: "Fresh Fruit Juice",
     category: "Drinks",
@@ -469,10 +467,12 @@ const foods = [
   },
 ];
 
+function Menu() {
+  const [expanded, setExpanded] = useState(false);
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [cart, setCart] = useState([]);
-  const [showAll, setShowAll] =useState(false)
+  const [showAll, setShowAll] = useState(false);
 
   const filters = [
     "All",
@@ -488,50 +488,52 @@ const foods = [
 
   const filteredFoods = foods.filter((food) => {
     const matchCategory =
-      activeCategory === "All" ||
-      food.category === activeCategory;
+      activeCategory === "All" || food.category === activeCategory;
 
     const matchSearch = food.name
       .toLowerCase()
-      .includes(search.toLowerCase());
+      .includes(search.trim().toLowerCase());
 
     return matchCategory && matchSearch;
   });
-  const displayedFoods = showAll
-  ? filteredFoods
-  : filteredFoods.slice(0, 16);
+
+  const displayedFoods = showAll ? filteredFoods : filteredFoods.slice(0, 16);
 
   const addToCart = (food) => {
     setCart((previousCart) => [...previousCart, food]);
   };
 
   return (
-    <div className="scroll-mt-5 px-5 py-10" id="menu">
+    <section id="menu" className="scroll-mt-20 px-4 py-10 sm:px-6 lg:px-10">
       <div className="mb-8 text-center">
-        <p className="mb-2 font-semibold tracking-wide uppercase text-orange-500">
+        <p className="mb-2 font-semibold uppercase tracking-wide text-orange-500">
           Delicious Food
         </p>
 
-        <h1 className="text-4xl font-bold text-orange-950 md:text-5xl">
+        <h1 className="text-3xl font-bold text-orange-950 sm:text-4xl md:text-5xl">
           Our Menu
         </h1>
 
         <p className="mx-auto mt-3 max-w-xl leading-7 text-stone-600">
-          Discover delicious meals prepared with fresh ingredients and made
-          to bring happiness to every bite.
+          Discover delicious meals prepared with fresh ingredients and made to
+          bring happiness to every bite.
         </p>
       </div>
 
       {/* Search and Cart */}
-      <div className="mx-auto mb-8 flex max-w-5xl flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="mx-auto mb-8 flex max-w-5xl flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex w-full items-center gap-3 rounded-full border border-orange-200 bg-white px-5 py-3 shadow-sm sm:max-w-md">
           <FiSearch className="shrink-0 text-xl text-orange-500" />
 
           <input
             type="text"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setShowAll(false);
+            }}
             placeholder="Search your favorite foods..."
+            aria-label="Search foods"
             className="w-full bg-transparent text-stone-700 outline-none"
           />
         </div>
@@ -542,7 +544,7 @@ const foods = [
             alert(
               cart.length
                 ? `You added ${cart.length} item(s) to your cart.`
-                : "Your cart is empty!"
+                : "Your cart is empty!",
             )
           }
           className="flex items-center justify-center gap-2 rounded-full bg-orange-500 px-6 py-3 font-semibold text-white transition-colors hover:bg-orange-600"
@@ -558,8 +560,12 @@ const foods = [
           <button
             key={filter}
             type="button"
-            onClick={() => setActiveCategory(filter)}
-            className={`rounded-full px-5 py-2.5 font-semibold transition-all duration-200 ${
+            onClick={() => {
+              setActiveCategory(filter);
+              setShowAll(false);
+            }}
+            aria-pressed={activeCategory === filter}
+            className={`rounded-full px-4 py-2.5 text-sm font-semibold transition-all duration-200 sm:px-5 ${
               activeCategory === filter
                 ? "bg-orange-500 text-white shadow-md"
                 : "border border-orange-200 bg-white text-orange-800 hover:bg-orange-100"
@@ -571,70 +577,93 @@ const foods = [
       </div>
 
       {/* Food Cards */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {displayedFoods.map((food) => (
-          <div
-            key={food.name}
-            className="group overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-          >
-            <div className="h-52 overflow-hidden bg-orange-100">
-              <img
-                src={food.img}
-                alt={food.name}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-              />
-            </div>
+      {displayedFoods.length > 0 ? (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-6">
+          {displayedFoods.map((food) => (
+            <div
+              key={food.name}
+              className="group min-w-0 overflow-hidden rounded-xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div className="h-28 overflow-hidden bg-orange-100 sm:h-40 lg:h-52">
+                <img
+                  src={food.img}
+                  alt={food.name}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
 
-            <div className="p-5">
-              <p className="mb-2 text-sm font-medium text-orange-500">
-                {food.category}
-              </p>
+              <div className="p-2.5 sm:p-3 lg:p-5">
+                <p className="mb-1 text-[10px] font-medium text-orange-500 sm:text-xs lg:mb-2 lg:text-sm">
+                  {food.category}
+                </p>
 
-              <h2 className="text-xl font-bold text-orange-950">
-                {food.name}
-              </h2>
+                <h2 className="truncate text-sm font-bold text-orange-950 sm:text-base lg:text-xl">
+                  {food.name}
+                </h2>
 
-              <p className="mt-2 min-h-18 text-sm leading-6 text-stone-600">
-                {food.des}
-              </p>
+                <div className="mt-1 flex items-baseline gap-1 text-xs leading-4 text-stone-600 sm:mt-2 lg:text-sm lg:leading-6">
+                  <p
+                    title={food.des}
+                    className={expanded ? "" : "min-w-0 flex-1 truncate"}
+                  >
+                    {food.des}
+                    {expanded && (
+                      <button
+                        onClick={() => setExpanded(false)}
+                        className="ml-1 font-medium text-orange-500 hover:underline"
+                      >
+                        See less
+                      </button>
+                    )}
+                  </p>
 
-              <div className="mt-5 flex items-center justify-between gap-3">
-                <span className="text-xl font-bold text-orange-600">
-                  ${food.price.toFixed(2)}
-                </span>
+                  {!expanded && (
+                    <button
+                      onClick={() => setExpanded(true)}
+                      className="shrink-0 font-medium text-orange-500 hover:underline"
+                    >
+                      See more
+                    </button>
+                  )}
+                </div>
 
-                <button
-                  type="button"
-                  onClick={() => addToCart(food)}
-                  className="rounded-full bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
-                >
-                  Add to Cart
-                </button>
+                <div className="mt-3 flex flex-col items-start gap-2 sm:mt-4 sm:flex-row sm:items-center sm:justify-between lg:mt-5">
+                  <span className="text-sm font-bold text-orange-600 sm:text-base lg:text-xl">
+                    ${food.price.toFixed(2)}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={() => addToCart(food)}
+                    className="w-full rounded-full bg-orange-500 px-2 py-2 text-xs font-semibold text-white transition-colors hover:bg-orange-600 sm:w-auto sm:px-3 lg:px-4"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-       {filteredFoods.length > 16 && (
-  <div className="mt-10 flex justify-center">
-    <button
-      type="button"
-      onClick={() => setShowAll(!showAll)}
-      className="rounded-full bg-orange-500 px-8 py-3 font-semibold text-white transition-colors hover:bg-orange-600"
-    >
-      {showAll ? "Show less" : "Show more"}
-    </button>
-  </div>
-)}
-
-      {/* Empty Search Result */}
-      {filteredFoods.length === 0 && (
+          ))}
+        </div>
+      ) : (
         <p className="py-12 text-center text-stone-500">
           No food found. Try another search.
         </p>
       )}
-    </div>
+
+      {/* Show More / Show Less */}
+      {filteredFoods.length > 16 && (
+        <div className="mt-10 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setShowAll((previous) => !previous)}
+            className="rounded-full bg-orange-500 px-8 py-3 font-semibold text-white transition-colors hover:bg-orange-600"
+          >
+            {showAll ? "Show less" : "Show more"}
+          </button>
+        </div>
+      )}
+    </section>
   );
 }
 

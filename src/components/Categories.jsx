@@ -164,42 +164,40 @@ function Categories() {
       </div>
 
       {/* Food Cards */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filteredCategories.map((cate) => (
-          <div
-            key={cate.name}
-            className="group overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-          >
-            <div className="h-52 overflow-hidden bg-orange-50">
-              <img
-                src={cate.img}
-                alt={cate.name}
-                loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
-              />
-            </div>
-
-            <div className="p-5">
-              <h3 className="text-xl font-bold text-orange-950">
-                {cate.name}
-              </h3>
-
-              <p className="mt-2 min-h-18 text-sm leading-6 text-stone-600">
-                {cate.des}
-              </p>
-
-              <button
-                onClick={() =>
-                  alert(`You selected ${cate.name}!`)
-                }
-                className="mt-4 w-full rounded-full bg-orange-500 px-4 py-2.5 font-semibold text-white transition-colors duration-200 hover:bg-orange-600"
-              >
-                {cate.button}
-              </button>
-            </div>
-          </div>
-        ))}
+     <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
+  {filteredCategories.map((cate) => (
+    <div
+      key={cate.name}
+      className="group overflow-hidden rounded-xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl sm:rounded-2xl"
+    >
+      <div className="h-32 overflow-hidden bg-orange-50 sm:h-52">
+        <img
+          src={cate.img}
+          alt={cate.name}
+          loading="lazy"
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+        />
       </div>
+
+      <div className="p-3 sm:p-5">
+        <h3 className="text-base font-bold text-orange-950 sm:text-xl">
+          {cate.name}
+        </h3>
+
+        <p className="mt-1 line-clamp-3 text-xs leading-5 text-stone-600 sm:mt-2 sm:min-h-18 sm:text-sm sm:leading-6">
+          {cate.des}
+        </p>
+
+        <button
+          onClick={() => alert(`You selected ${cate.name}!`)}
+          className="mt-3 w-full rounded-full bg-orange-500 px-3 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-orange-600 sm:mt-4 sm:px-4 sm:py-2.5 sm:text-base"
+        >
+          {cate.button}
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
 
       {filteredCategories.length === 0 && (
         <p className="py-10 text-center text-stone-500">
